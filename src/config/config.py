@@ -7,7 +7,7 @@ class Config:
   """
 
   # Name of the remote computer
-  remote_computer_name = None
+  computer_name = None
 
   # Filtering: User SID
   sid = None
@@ -45,7 +45,7 @@ class Config:
                start_date: str = None,
                end_date: str = None,
                make_excel: bool = False) -> None:
-    self.remote_computer_name = name_or_ip
+    self.computer_name = name_or_ip
 
     self.sid = sid
     self.start_date = FormatUtil.datetime_to_iso(start_date) + 'T00:00:00Z' if start_date else start_date

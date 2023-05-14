@@ -34,7 +34,7 @@ class EventManager:
     """ Attempt to create event log reader handler """
     print('[EventManager]: Creating handler')
     try:
-      handler = win32evtlog.OpenEventLog(self.config.remote_computer_name,
+      handler = win32evtlog.OpenEventLog(self.config.computer_name,
                                          self.config.log_type)
       print('[EventManager]: Handler created')
 

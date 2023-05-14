@@ -73,7 +73,7 @@ class QueryManager:
     query = f"""
     *[
       System[
-        {QueryManager._get_computer_query(config.remote_computer_name)}
+        {QueryManager._get_computer_query(config.computer_name)}
         (EventID=4688 or EventID=4689)
         {QueryManager._get_date_query(config.start_date, config.end_date)}
       ] 

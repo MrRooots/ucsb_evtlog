@@ -32,7 +32,7 @@ def parse_console() -> dict[str, str]:
 def main():
   config = Config(**parse_console())
 
-  print(config.remote_computer_name)
+  print(config.computer_name)
   print(config.sid)
   print(config.start_date)
   print(config.end_date)
