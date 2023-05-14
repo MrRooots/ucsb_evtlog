@@ -1,0 +1,26 @@
+<QueryList>
+    <Query Id="0" Path="Security">
+        <Select Path="Security">
+            *[
+                *[
+                    System[
+                        Computer='COMPUTER_NAME'
+                        and
+                        (EventID=4688 or EventID=4689)
+                        and
+                            (
+                                TimeCreated[@SystemTime >= 'START_DATE']
+                                and
+                                TimeCreated[@SystemTime <= 'END_DATE']
+                            )
+                    ]
+                    and
+                    EventData[
+                        Data[
+                        @Name='SubjectUserSid'
+                        ] = 'USER_SID {FORMAT: S-1-5-21-KKKKKKKKKK-ZZZZZZZZZZ-XXXXXXXXX-YYYY}'
+                ]
+            ]
+        </Select>
+    </Query>
+</QueryList>
