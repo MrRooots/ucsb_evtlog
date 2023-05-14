@@ -39,16 +39,6 @@ class Config:
     'make_excel',
   ]
 
-  collected_data = {
-    'ComputerName': 'Имя компьютера с которого поступили данные',
-    'TimeGenerated': 'Время возникновения события',
-    'SourceName': 'Имя пользователя, инициировавшего событие',
-    'Domain': 'Имя домена пользователя',
-    'Sid': 'Sid.',
-    'process_name': 'Имя процесса.',
-    'action': 'Действие: "Запуск процесса" или "Завершение процесса".',
-  }
-
   def __init__(self,
                name_or_ip: str = 'localhost',
                sid: str = None,
