@@ -4,6 +4,7 @@ import winerror
 
 from src.config.config import Config
 from src.core.query_manager import QueryManager
+from src.models.event_model import EventModel
 from src.utils.format_util import FormatUtil
 
 
@@ -23,7 +24,7 @@ class EventManager:
   flags = None
 
   # Total list of filtered events
-  events = []
+  events: list[EventModel] = []
 
   def __init__(self, config: Config) -> None:
     self.config = config
@@ -45,10 +46,13 @@ class EventManager:
       else:
         exit(f'[FatalError]: Unhandled exception during handler creation: {error}')
 
-  def get_events(self) -> list:
+  def get_events(self, clear: bool = True) -> list[EventModel]:
     """ Get events that specified in config file """
     print(f'[EventManager]: Total events count: {win32evtlog.GetNumberOfEventLogRecords(self.handler)}')
     print(f'[EventManager]: Filtering starts. Please wait')
+
+    if clear:
+      self.events.clear()
 
     events = win32evtlog.EvtQuery('Security', win32evtlog.EvtQueryReverseDirection,
                                   QueryManager.build_xml_query_from_config(self.config),
@@ -62,6 +66,8 @@ class EventManager:
 
       for e in event:
         event_xml = win32evtlog.EvtRender(e, win32evtlog.EvtRenderEventXml)
-        print(FormatUtil.format_event(event_xml))
+        self.events.append(FormatUtil.event_to_model(event_xml))
+
+    print(f'[EventManager]: Filtering complete. Filtered {len(self.events)} events')
 
     return self.events

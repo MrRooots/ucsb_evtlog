@@ -32,11 +32,23 @@ class Config:
 
   # Available cmd arguments
   CMD_ARGS = [
-    'name_or_ip',  # This argument is required
+    'name_or_ip',  # This argument is required and must be first
     'sid',
     'end_date',
     'start_date',
-    'make_excel',
+    'make_excel',  # This argument is optional and must be last
+  ]
+
+  # Data to collect and display in result
+  COLLECTED_DATA = [
+    'EventID',
+    'ComputerName',
+    'TimeGenerated',
+    'UserName',
+    'Domain',
+    'Sid',
+    'ProcessName',
+    'Action',
   ]
 
   def __init__(self,

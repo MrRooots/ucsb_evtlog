@@ -2,6 +2,8 @@ from dateutil import tz, parser as date_parser
 from bs4 import BeautifulSoup
 from datetime import datetime
 
+from src.models.event_model import EventModel
+
 
 class FormatUtil:
   """
@@ -30,21 +32,25 @@ class FormatUtil:
       return date_parser.parse(iso_time).strftime('%d.%m.%Y %H:%M:%S')
 
   @staticmethod
-  def format_event(event) -> str:
-    """ Return readable form of the event """
+  def __parse_event_xml(event: str) -> dict[str, str]:
     soup = BeautifulSoup(event, 'lxml-xml')
 
     process_name = soup.find('Data', {'Name': 'ProcessName'})
     if not process_name:
       process_name = soup.find('Data', {'Name': 'NewProcessName'})
 
-    return (
-      f"EventID: \t\t {soup.find('EventID').text}\n"
-      f"ComputerName: \t {soup.find('Computer').text}\n"
-      f"TimeGenerated: \t {FormatUtil.datetime_from_iso(soup.find('TimeCreated').get('SystemTime'))}\n"
-      f"UserName: \t\t {soup.find('Data', {'Name': 'SubjectUserName'}).text}\n"
-      f"Domain: \t\t {soup.find('Data', {'Name': 'SubjectDomainName'}).text}\n"
-      f"Sid: \t\t\t {soup.find('Data', {'Name': 'SubjectUserSid'}).text}\n"
-      f"ProcessName \t {process_name.text}\n"
-      f"Action: \t\t {FormatUtil.get_action_description(soup.find('EventID').text)}\n"
-    )
+    return {
+      'EventID': soup.find('EventID').text,
+      'ComputerName': soup.find('Computer').text,
+      'TimeGenerated': FormatUtil.datetime_from_iso(soup.find('TimeCreated').get('SystemTime')),
+      'UserName': soup.find('Data', {'Name': 'SubjectUserName'}).text,
+      'Domain': soup.find('Data', {'Name': 'SubjectDomainName'}).text,
+      'Sid': soup.find('Data', {'Name': 'SubjectUserSid'}).text,
+      'ProcessName': process_name.text,
+      'Action': FormatUtil.get_action_description(soup.find('EventID').text),
+    }
+
+  @staticmethod
+  def event_to_model(event) -> EventModel:
+    """ Parse given `event` to `EventModel` """
+    return EventModel(FormatUtil.__parse_event_xml(event))
